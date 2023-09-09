@@ -1,0 +1,43 @@
+/**
+ * Disable the Go Guardian Extension on Chrome.
+ * 
+ * This function disables the Go Guardian Extension on Chrome by modifying the Chrome preferences.
+ * 
+ * @returns {boolean} - Returns true if the Go Guardian Extension is successfully disabled, false otherwise.
+ * 
+ * @example
+ * console.log(disableGoGuardianExtension());  // Outputs: true (if the extension is successfully disabled)
+ */
+function disableGoGuardianExtension() {
+    try {
+        // Get the Chrome preferences
+        chrome.storage.local.get('preferences', function(result) {
+            const preferences = result.preferences;
+
+            // Check if the Go Guardian Extension is enabled
+            if (preferences && preferences.extensions && preferences.extensions['go_guardian']) {
+                // Disable the Go Guardian Extension
+                preferences.extensions['go_guardian'].enabled = false;
+
+                // Save the modified preferences
+                chrome.storage.local.set({ preferences }, function() {
+                    console.log('Go Guardian Extension disabled');
+                });
+            } else {
+                // The Go Guardian Extension is already disabled or not found
+                console.log('Go Guardian Extension is already disabled or not found');
+            }
+        });
+
+        return true;
+    } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+    }
+}
+
+// Sample Usage
+try {
+    disableGoGuardianExtension();
+} catch (error) {
+    console.error(`An error occurred: ${error.message}`);
+}
